@@ -6,9 +6,9 @@
 
     <!-- tag::liberty-maven-app-parent[] -->
     <parent>
-        <groupId>net.wasdev.wlp.maven.parent</groupId>
+        <groupId>io.openliberty.tools</groupId>
         <artifactId>liberty-maven-app-parent</artifactId>
-        <version>RELEASE</version>
+        <version>3.2</version>
     </parent>
     <!-- end::liberty-maven-app-parent[] -->
 
@@ -18,6 +18,7 @@
     <packaging>war</packaging>
 
     <properties>
+        <wlp.usr.dir>${project.build.directory}/wlp-usr/</wlp.usr.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -119,10 +120,20 @@
         </dependency>
         <!-- tag::arquillian-liberty-managed-junit[] -->
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.openliberty.arquillian</groupId>
-            <artifactId>arquillian-liberty-managed-junit</artifactId>
-            <version>1.1.6</version>
-            <type>pom</type>
+            <artifactId>arquillian-liberty-managed</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <!-- end::arquillian-liberty-managed-junit[] -->
@@ -184,12 +195,14 @@
             <!-- end::maven-failsafe-plugin[] -->
             <!-- tag::liberty-maven-plugin[] -->
             <plugin>
-                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.3-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <!-- Specify configuration, executions for liberty-maven-plugin -->
                 <configuration>
                     <serverName>ArquillianManagedServer</serverName>
+                    <userDirectory>${wlp.usr.dir}</userDirectory>
                     <assemblyArtifact>
                         <groupId>io.openliberty</groupId>
                         <artifactId>openliberty-runtime</artifactId>
@@ -206,6 +219,9 @@
                     <!-- tag::skipTestServer[] -->
                     <skipTestServer>true</skipTestServer>
                     <!-- end::skipTestServer[] -->
+                    <arquillianProperties>
+                        <usrDir>${wlp.usr.dir}</usrDir>
+                    </arquillianProperties>
                 </configuration>
                 <executions>
                     <execution>
